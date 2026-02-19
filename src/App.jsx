@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Auth } from './components/auth'
 import TransactionsPage from './components/Transactions/TransactionsPage'
 import UploadPdf from './components/UploadPdf'

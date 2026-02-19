@@ -31,7 +31,6 @@ export default function DisplayCharts() {
     return <p className="mt-6 text-center">No transactions to display</p>;
   }
 
-  // 🔹 Aggregations
   const cashFlow = buildDailyCashFlow(transactions);
   const debitCredit = buildDebitCreditSplit(transactions);
   const topToFrom = buildTopToFrom(transactions);

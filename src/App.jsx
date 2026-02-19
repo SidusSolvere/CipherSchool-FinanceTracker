@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Auth } from './components/auth'
 import Table from './components/table'
+import TransactionsPage from './components/Transactions/TransactionsPage'
 
 function App() {
 
@@ -8,7 +9,7 @@ function App() {
   return (
     <>
     <Auth></Auth>
-    <Table></Table>
+    <TransactionsPage></TransactionsPage>
     </>
   )
 }

@@ -1,23 +1,39 @@
-import { Auth } from './components/auth'
-import TransactionsPage from './components/Transactions/TransactionsPage'
-import UploadPdf from './components/UploadPdf'
-import ClearUserTransactions from './components/DeleteAll'
-import DisplayCharts from './components/Charts/DisplayCharts'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./components/AuthContext";
+import Navbar from "./components/nav";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
+import { Login } from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-
-
   return (
-    <>
-    <Auth></Auth>
-    <TransactionsPage></TransactionsPage>
-   <UploadPdf></UploadPdf>
-   <ClearUserTransactions></ClearUserTransactions>
-   <DisplayCharts></DisplayCharts>
+    <BrowserRouter>
+      <AuthProvider>
+        <Navbar/>
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
 
-    </>
-  )
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

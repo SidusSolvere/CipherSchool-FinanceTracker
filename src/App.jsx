@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Auth } from './components/auth'
-import Table from './components/table'
 import TransactionsPage from './components/Transactions/TransactionsPage'
+import UploadPdf from './components/UploadPdf'
+import ClearUserTransactions from './components/DeleteAll'
+
 
 function App() {
 
@@ -10,6 +12,9 @@ function App() {
     <>
     <Auth></Auth>
     <TransactionsPage></TransactionsPage>
+   <UploadPdf></UploadPdf>
+   <ClearUserTransactions></ClearUserTransactions>
+
     </>
   )
 }

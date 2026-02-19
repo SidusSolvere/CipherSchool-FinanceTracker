@@ -19,12 +19,15 @@ import { onAuthStateChanged } from "firebase/auth";
 import AddTransactionForm from "./AddTransactionForm";
 import TransactionList from "./TransactionList";
 import EditTransactionPopup from "./EditTransactionPopup";
-
+import TransactionHeader from "./TransactionHeader";
 function TransactionsPage() {
   const PAGE_SIZES = [5, 10, 20, 50];
 
   const [user, setUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
+const [sortField, setSortField] = useState("Date");
+const [sortDirection, setSortDirection] = useState("desc");
+
 
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(0);
@@ -33,67 +36,86 @@ function TransactionsPage() {
 
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingTx, setEditingTx] = useState(null);
+  const handleSort = (field) => {
+  if (field === sortField) {
+    setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+  } else {
+    setSortField(field);
+    setSortDirection("asc");
+  }
+
+  setCurrentPage(0);
+  setPageCursors([]);
+};
+const [filters, setFilters] = useState({
+  toFrom: "",
+  transactionId: "",
+  type: "ALL",
+});
+
 
   useEffect(() => {
     return onAuthStateChanged(auth, setUser);
   }, []);
+const fetchPage = async (pageIndex = 0) => {
+  if (!user || loading) return;
+  setLoading(true);
 
-  const fetchPage = async (pageIndex) => {
-    if (!user || loading) return;
+  let qConstraints = [
+    where("UserId", "==", user.uid),
+    orderBy(sortField, sortDirection),
+    limit(pageSize),
+  ];
 
-    setLoading(true);
+  if (filters.type !== "ALL") {
+    qConstraints.push(where("Type", "==", filters.type));
+  }
 
-    try {
-      let q = query(
-        collection(db, "Transactions"),
-        where("UserId", "==", user.uid),
-        orderBy("Date", "desc"),
-        limit(pageSize)
-      );
+  let q = query(collection(db, "Transactions"), ...qConstraints);
 
-      if (pageIndex > 0 && pageCursors[pageIndex - 1]) {
-        q = query(
-          collection(db, "Transactions"),
-          where("UserId", "==", user.uid),
-          orderBy("Date", "desc"),
-          startAfter(pageCursors[pageIndex - 1]),
-          limit(pageSize)
-        );
-      }
+  if (pageIndex > 0 && pageCursors[pageIndex - 1]) {
+    q = query(q, startAfter(pageCursors[pageIndex - 1]));
+  }
 
-      const snapshot = await getDocs(q);
+  const snapshot = await getDocs(q);
 
-      setTransactions(
-        snapshot.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      );
+  let docs = snapshot.docs.map((d) => ({
+    id: d.id,
+    ...d.data(),
+  }));
 
-      setPageCursors((prev) => {
-        const copy = [...prev];
-        copy[pageIndex] =
-          snapshot.docs[snapshot.docs.length - 1] || null;
-        return copy;
-      });
+  if (filters.toFrom) {
+    docs = docs.filter((d) =>
+      d.ToFrom?.toLowerCase().includes(filters.toFrom.toLowerCase())
+    );
+  }
 
-      setCurrentPage(pageIndex);
-    } catch (err) {
-      console.error(err);
-    }
+  if (filters.transactionId) {
+    docs = docs.filter((d) =>
+      d.TransactionId?.includes(filters.transactionId)
+    );
+  }
 
-    setLoading(false);
-  };
+  const newCursors = [...pageCursors];
+  newCursors[pageIndex] =
+    snapshot.docs[snapshot.docs.length - 1] || null;
 
-  useEffect(() => {
-    if (!user) return;
+  setPageCursors(newCursors);
+  setTransactions(docs);
+  setCurrentPage(pageIndex);
+  setLoading(false);
+};
 
-    setTransactions([]);
-    setPageCursors([]);
-    setCurrentPage(0);
+useEffect(() => {
+  if (!user) return;
 
-    fetchPage(0);
-  }, [user, pageSize]);
+  setTransactions([]);
+  setPageCursors([]);
+  setCurrentPage(0);
+
+  fetchPage(0);
+}, [user, pageSize, sortField, sortDirection, filters]);
+
 
   const addTransaction = async (form) => {
     if (!user) return;
@@ -138,6 +160,18 @@ function TransactionsPage() {
       <AddTransactionForm onAdd={addTransaction} />
 
       <hr />
+      <TransactionHeader
+  sortField={sortField}
+  sortDirection={sortDirection}
+  onSort={handleSort}
+  filters={filters}
+  onFilterChange={(newFilters) => {
+    setFilters(newFilters);
+    setPageCursors([]);
+    setCurrentPage(0);
+  }}
+/>
+
 
       <TransactionList
         transactions={transactions}
@@ -145,25 +179,24 @@ function TransactionsPage() {
         onDelete={deleteTransaction}
         loading={loading}
       />
+<div className="mt-4 flex gap-2">
+  <button
+    disabled={currentPage === 0}
+    onClick={() => fetchPage(currentPage - 1)}
+    className="rounded border px-3 py-1 disabled:opacity-50"
+  >
+    Prev
+  </button>
 
-      <div className="flex gap-4 mt-4">
-        <button
-          onClick={() => fetchPage(currentPage - 1)}
-          disabled={currentPage === 0 || loading}
-        >
-          Prev
-        </button>
+  <span>Page {currentPage + 1}</span>
 
-        <span className="font-semibold">
-          Page {currentPage + 1}
-        </span>
+  <button
+    onClick={() => fetchPage(currentPage + 1)}
+    className="rounded border px-3 py-1"
+  >
+    Next
+  </button>
 
-        <button
-          onClick={() => fetchPage(currentPage + 1)}
-          disabled={!pageCursors[currentPage] || loading}
-        >
-          Next
-        </button>
         <span className="font-medium">Page size:</span>
         <select
           value={pageSize}

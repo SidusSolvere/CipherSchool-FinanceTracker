@@ -15,6 +15,10 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../../config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import GlassSurface from "@/components/GlassSurface";
+import { IoIosArrowDropleft,IoIosArrowDropright } from "react-icons/io";
+import UploadPdf from "@/components/UploadPdf"
+
 
 import AddTransactionForm from "./AddTransactionForm";
 import TransactionList from "./TransactionList";
@@ -159,7 +163,7 @@ useEffect(() => {
     <>
       <AddTransactionForm onAdd={addTransaction} />
 
-      <hr />
+     
       <TransactionHeader
   sortField={sortField}
   sortDirection={sortDirection}
@@ -179,37 +183,93 @@ useEffect(() => {
         onDelete={deleteTransaction}
         loading={loading}
       />
-<div className="mt-4 flex gap-2">
-  <button
-    disabled={currentPage === 0}
-    onClick={() => fetchPage(currentPage - 1)}
-    className="rounded border px-3 py-1 disabled:opacity-50"
+<div className=" w-full">
+  <GlassSurface
+  style={{
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 50,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 50,
+  }}
+    className="
+      w-full
+      px-6 py-3
+      border border-white/20
+      hover:border-white/80
+      flex items-center
+    "
   >
-    Prev
-  </button>
+    <div className="flex items-center gap-6">
+      <button
+        disabled={currentPage === 0}
+        onClick={() => fetchPage(currentPage - 1)}
+        className="
+          rounded-full
+          text-white/80
+          border border-white/20
+          hover:text-white
+          transition
+        "
+      >
+        <IoIosArrowDropleft className="scale-200 p-0 m-0"/>
+      </button>
 
-  <span>Page {currentPage + 1}</span>
+      <span className="text-white/70 font-medium">
+        Page {currentPage + 1}
+      </span>
 
-  <button
-    onClick={() => fetchPage(currentPage + 1)}
-    className="rounded border px-3 py-1"
-  >
-    Next
-  </button>
+      <button
+        onClick={() => fetchPage(currentPage + 1)}
+        className="
+          rounded-full
+          text-white/80
+          border border-white/20
+          hover:text-white
+          transition
+        "
+      >
+        <IoIosArrowDropright className="scale-200 p-0 m-0"/>
+      </button>
 
-        <span className="font-medium">Page size:</span>
+      <span className="text-white/70 font-medium">
+        Page size
+      </span>
+
+      <GlassSurface
+        borderRadius={16}
+        height={36}
+        className="
+          px-3
+          bg-white/10
+          backdrop-blur-md
+          border border-white/20
+          hover:border-white/80
+        "
+      >
         <select
           value={pageSize}
           onChange={(e) => setPageSize(Number(e.target.value))}
-          className="border px-2 py-1 rounded"
+          className="
+            bg-transparent
+            text-white
+            outline-none
+            cursor-pointer
+          "
         >
           {PAGE_SIZES.map((s) => (
-            <option key={s} value={s}>
+            <option key={s} value={s} className="text-black">
               {s}
             </option>
           ))}
         </select>
-      </div>
+      </GlassSurface>
+    </div>
+
+    <div className="flex-1" />
+       <UploadPdf></UploadPdf>
+
+  </GlassSurface>
+</div>
 
       {isEditOpen && (
         <EditTransactionPopup

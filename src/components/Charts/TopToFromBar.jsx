@@ -7,20 +7,53 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-export default function TopToFromBar({ data }) {
-  if (!data.length) return null;
+export default function TopToFromBar({
+  data,
+  nameKey = "name",
+  valueKey = "amount",
+  height = 520,
+}) {
+  if (!data?.length) return null;
+
+  const BAR_WIDTH = 80;
+  const MAX_WIDTH = 1200;
+
+  const chartWidth = Math.min(
+    data.length * BAR_WIDTH,
+    MAX_WIDTH
+  );
 
   return (
-    <section>
-      <h3>Top Recipients / Sources</h3>
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={data} layout="vertical">
-          <XAxis type="number" />
-          <YAxis dataKey="name" type="category" width={120} />
-          <Tooltip />
-          <Bar dataKey="amount" fill="#2563eb" />
-        </BarChart>
-      </ResponsiveContainer>
+    <section className="w-full">
+      <h3 className="mb-4 text-lg font-medium">
+        Top Recipients / Sources
+      </h3>
+
+      <div style={{ overflowX: "auto" }}>
+        <div style={{ width: chartWidth, height }}>
+          <ResponsiveContainer>
+            <BarChart data={data}>
+              <XAxis
+                dataKey={nameKey}
+                type="category"
+                interval={0}
+                angle={-35}
+                textAnchor="end"
+                height={90}
+                tickMargin={10}
+              />
+              <YAxis type="number" />
+              <Tooltip />
+              <Bar
+                dataKey={valueKey}
+                fill="#dc2626"
+                barSize={40}
+                radius={[6, 6, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </section>
   );
 }

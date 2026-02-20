@@ -26,7 +26,8 @@ function AddTransactionForm({ onAdd }) {
   };
 
   return (
-      <div className="flex h-8   m-16 justify-center px-4 py-3">
+    <div className="flex mx-auto w-full h-auto flex-col sm:flex-row sm:h-8 m-24 justify-center px-4 py-3">
+      
       <GlassSurface
         borderRadius={32}
         className="
@@ -36,7 +37,7 @@ function AddTransactionForm({ onAdd }) {
       hover:border-white/80
     "
       >
-        <form className="flex flex-row w-full gap-2  ">
+        <form className="flex flex-col w-full gap-2   sm:flex-row">
           <div className="flex items-center">
             <label className=" text-white/70">Amount</label>
             <GlassSurface

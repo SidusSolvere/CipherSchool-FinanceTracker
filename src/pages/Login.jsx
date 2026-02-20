@@ -1,4 +1,6 @@
 import { auth, googleProvide } from "../config/firebase";
+import RotatingText from "../components/RotatingText";
+
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -41,7 +43,7 @@ export const Login = () => {
     }
   };
   return (
-    <div className="relative h-screen w-screen overflow-hidden bg-black">
+    <div className="relative h-full w-screen  bg-black">
       <div className="absolute inset-0">
         <LiquidEther
           colors={["#ffffff", "#168500", "#177389"]}
@@ -65,8 +67,38 @@ export const Login = () => {
         />
       </div>
 
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 h-full w-full">
-        <div>
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 h-full w-full ">
+        <div className="items-center justify-center mx-auto mt-50 w-[80%] flex flex-col ">
+          <GlassSurface
+            borderRadius={32}
+            width={400}
+            height={450}
+            className="
+            
+            backdrop-blur-xl
+           border border-white/20
+    hover:border-white/80"
+          >
+            <div className="flex flex-col ">
+              <RotatingText
+                texts={["Fast", "Secure", "Cool"]}
+                mainClassName="px-2 sm:px-2 md:px-3 text-6xl font-bold bg-green-600 text-black overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg mb-16 w-[70%] "
+                staggerFrom={"last"}
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "-120%" }}
+                staggerDuration={0.025}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                rotationInterval={2000}
+              />
+              <div className="text-white text-2xl font-semibold">
+                Track your income and expenses in one place, visualize your
+                spending with interactive charts, and stay in control of your
+                finances effortlessly
+              </div>
+            </div>
+          </GlassSurface>
         </div>
         <div className="flex items-center justify-center px-4">
           <GlassSurface

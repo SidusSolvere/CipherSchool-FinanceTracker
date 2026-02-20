@@ -161,9 +161,10 @@ useEffect(() => {
 
   return (
     <>
+    
       <AddTransactionForm onAdd={addTransaction} />
-
-     
+      <div className="overflow-auto">
+<div className="sm:w-[90%] w-[1600px] mx-auto ">
       <TransactionHeader
   sortField={sortField}
   sortDirection={sortDirection}
@@ -183,6 +184,7 @@ useEffect(() => {
         onDelete={deleteTransaction}
         loading={loading}
       />
+     
 <div className=" w-full">
   <GlassSurface
   style={{
@@ -279,6 +281,8 @@ useEffect(() => {
           onUpdate={updateTransaction}
         />
       )}
+      </div>
+      </div>
     </>
   );
 }

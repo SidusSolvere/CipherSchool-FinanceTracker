@@ -114,7 +114,8 @@ function TransactionHeader({
       justify-between
       gap-6
       flex-wrap
-      rounded-t-2xl rounded-b-none"
+      rounded-t-2xl rounded-b-none 
+"      
   >
     {columns.map((col) => (
       <div

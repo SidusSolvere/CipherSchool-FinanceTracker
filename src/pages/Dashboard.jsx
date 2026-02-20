@@ -6,7 +6,7 @@ import DarkVeil from "../components/DarkVeil";
 
 function Dashboard() {
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <DarkVeil hueShift={49} />
       </div>

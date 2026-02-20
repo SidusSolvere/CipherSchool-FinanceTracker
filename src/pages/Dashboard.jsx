@@ -7,13 +7,10 @@ import DarkVeil from "../components/DarkVeil";
 function Dashboard() {
   return (
     <div className="bg-black text-white">
-     
       <div className="fixed inset-0 z-0 pointer-events-none">
-       
         <DarkVeil hueShift={49} />
       </div>
       <div className="relative z-10 min-h-screen">
-       
         <TransactionsPage /> <DisplayCharts /> <ClearUserTransactions />
       </div>
     </div>

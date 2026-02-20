@@ -42,7 +42,6 @@ export const Login = () => {
   };
   return (
     <div className="relative h-screen w-screen overflow-hidden bg-black">
-      {/* background */}
       <div className="absolute inset-0">
         <LiquidEther
           colors={["#ffffff", "#168500", "#177389"]}
@@ -67,7 +66,8 @@ export const Login = () => {
       </div>
 
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 h-full w-full">
-        <div />
+        <div>
+        </div>
         <div className="flex items-center justify-center px-4">
           <GlassSurface
             borderRadius={32}
@@ -121,7 +121,7 @@ export const Login = () => {
                   borderRadius={16}
                   width={300}
                   height={40}
-                  className="w-full 
+                  className="w-full
                    text-white
                     placeholder-white/70
     border border-white/20
